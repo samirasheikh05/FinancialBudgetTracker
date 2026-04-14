@@ -211,6 +211,20 @@
       transform: scale(0.97);
     }
 
+    /* Reset Button Style */
+    .reset-btn {
+      background: #dc3545;
+      color: white;
+      padding: 0.7rem 1.5rem;
+      font-weight: 700;
+      margin-top: 0.5rem;
+    }
+
+    .reset-btn:hover {
+      background: #b91c1c;
+      transform: scale(0.97);
+    }
+
     .form-card {
       background: #ffffff;
       border-radius: 1.5rem;
@@ -399,7 +413,10 @@
   </div>
 
   <!-- Summary -->
-  <h2>📈 Summary</h2>
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 1rem;">
+    <h2>📈 Summary</h2>
+    <button id="resetBtn" class="reset-btn">🗑️ Reset All Data</button>
+  </div>
   <div class="summary-grid">
     <div class="card"><div class="card-label">Total Income</div><div class="card-value income-val" id="totalIncome">$0.00</div></div>
     <div class="card"><div class="card-label">Total Expense</div><div class="card-value expense-val" id="totalExpense">$0.00</div></div>
@@ -479,6 +496,44 @@
   }
   function saveStartingMoney() {
     localStorage.setItem('startingMoney', startingMoney);
+  }
+
+  // RESET FUNCTION - Clears all data
+  function resetAllData() {
+    const confirmed = confirm(
+      '⚠️ RESET CONFIRMATION ⚠️\n\n' +
+      'This will permanently delete:\n' +
+      '• All transactions\n' +
+      '• Starting money amount\n' +
+      '• All imported data\n\n' +
+      'This action CANNOT be undone!\n\n' +
+      'Click OK to reset everything.'
+    );
+    
+    if (confirmed) {
+      // Clear all transactions
+      transactions = [];
+      // Reset starting money to default
+      startingMoney = 1000;
+      // Clear localStorage
+      localStorage.removeItem('transactions');
+      localStorage.removeItem('startingMoney');
+      // Update input field
+      startingMoneyInput.value = 1000;
+      // Reset filter to 'all'
+      currentFilter = 'all';
+      // Update active filter button
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-filter') === 'all') {
+          btn.classList.add('active');
+        }
+      });
+      // Re-render UI
+      renderTransactions();
+      updateSummary();
+      alert('✅ All data has been reset successfully!');
+    }
   }
 
   // Update summary
@@ -661,6 +716,7 @@
   // manual add & starting money
   const addBtn = document.getElementById('addTransactionBtn');
   const setMoneyBtn = document.getElementById('setStartingMoneyBtn');
+  const resetBtn = document.getElementById('resetBtn');
   const filterBtns = document.querySelectorAll('.filter-btn');
   const totalIncomeEl = document.getElementById('totalIncome');
   const totalExpenseEl = document.getElementById('totalExpense');
@@ -674,6 +730,7 @@
 
   addBtn.addEventListener('click', addManualTransaction);
   setMoneyBtn.addEventListener('click', setStartingMoney);
+  resetBtn.addEventListener('click', resetAllData);
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -685,10 +742,10 @@
     });
   });
 
-  // Initialize
+  // Initialize the app
   loadData();
-  updateSummary();
   renderTransactions();
+  updateSummary();
 </script>
 </body>
 </html>
