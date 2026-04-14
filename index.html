@@ -1,93 +1,632 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Budget Planner</title>
-    <link rel="stylesheet" href="css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Budget Planner | Income, Expense & Category Tracking</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, 'Roboto', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(145deg, #f0f5fb 0%, #e9eef4 100%);
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(2px);
+      border-radius: 2rem;
+      padding: 2rem 1.8rem;
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1e2b3c;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #3b82f6;
+      display: inline-block;
+    }
+
+    h2, h3 {
+      font-weight: 600;
+      color: #1e2f3c;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+    }
+
+    .summary-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      flex: 1 1 200px;
+      background: white;
+      border-radius: 1.2rem;
+      padding: 1rem 1.2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      border: 1px solid #e2edff;
+    }
+
+    .card-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: #5b6e8c;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-value {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #1f2e45;
+    }
+
+    .income-val { color: #0f7b3a; }
+    .expense-val { color: #c2412c; }
+    .balance-val { color: #2c6e9e; }
+    .money-left { color: #1e6f5c; }
+
+    .starting-section {
+      background: white;
+      border-radius: 1rem;
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 1rem;
+      border: 1px solid #e2edff;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      flex: 2 1 200px;
+    }
+
+    .input-group label {
+      font-weight: 600;
+      font-size: 0.8rem;
+      color: #2c3e50;
+    }
+
+    input, select, button {
+      border-radius: 40px;
+      border: 1px solid #cbd5e1;
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      background: white;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+    }
+
+    button {
+      background: #2c5f8a;
+      color: white;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1f4a6e;
+    }
+
+    .btn-secondary {
+      background: #eef2ff;
+      color: #1e40af;
+      border: 1px solid #b9d0f8;
+    }
+
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+      margin-bottom: 2rem;
+      background: #f8fafc;
+      padding: 1.2rem;
+      border-radius: 1.2rem;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 1rem 0 1.5rem 0;
+      border-radius: 1rem;
+      background: white;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid #e9edf2;
+    }
+
+    th {
+      background: #f1f6fd;
+      font-weight: 600;
+      color: #2c4f6e;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .badge-income {
+      background: #e0f2e9;
+      color: #0a6b3e;
+    }
+
+    .badge-expense {
+      background: #ffe6e3;
+      color: #b91c1c;
+    }
+
+    .delete-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: #9ca3af;
+      padding: 0.2rem 0.6rem;
+    }
+
+    .delete-btn:hover {
+      color: #dc2626;
+    }
+
+    .empty-row td {
+      text-align: center;
+      color: #7f8c8d;
+      padding: 2rem;
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .filter-btn {
+      background: #f1f5f9;
+      color: #334155;
+      padding: 0.3rem 1rem;
+      font-size: 0.8rem;
+    }
+
+    .filter-btn.active {
+      background: #2c5f8a;
+      color: white;
+    }
+
+    /* Category breakdown section */
+    .category-section {
+      margin-top: 2rem;
+      background: white;
+      border-radius: 1.2rem;
+      padding: 1.2rem;
+      border: 1px solid #e2edff;
+    }
+
+    .category-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .category-card {
+      flex: 1 1 180px;
+      background: #f8fafc;
+      border-radius: 1rem;
+      padding: 0.8rem 1rem;
+      border-left: 4px solid #3b82f6;
+    }
+
+    .category-name {
+      font-weight: 700;
+      color: #1e2f3c;
+      margin-bottom: 0.3rem;
+    }
+
+    .category-amount {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #c2412c;
+    }
+
+    .category-empty {
+      color: #6c86a3;
+      font-style: italic;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: #6c86a3;
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 1rem; }
+      .app-container { padding: 1.2rem; }
+      .card-value { font-size: 1.3rem; }
+      .category-card { flex: 1 1 100%; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📊 Budget Planner</h1>
-        
-        <div class="card">
-            <h3>💰 Starting Money</h3>
-            <input type="number" id="startingMoney" placeholder="Enter starting money">
-            <button onclick="setStartingMoney()">Set Starting Money</button>
-            <p>Current: $<span id="currentMoney">0</span></p>
-        </div>
+<div class="app-container">
+  <h1>Budget Planner</h1>
 
-        <div class="card">
-            <h3>➕ Add Transaction</h3>
-            <input type="text" id="desc" placeholder="Description">
-            <input type="number" id="amount" placeholder="Amount">
-            <select id="type">
-                <option value="income">Income</option>
-                <option value="expense">Expense</option>
-            </select>
-            <select id="category">
-                <option value="general">General</option>
-                <option value="groceries">Groceries</option>
-                <option value="bills">Bills</option>
-                <option value="entertainment">Entertainment</option>
-                <option value="transport">Transport</option>
-                <option value="shopping">Shopping</option>
-                <option value="health">Health</option>
-                <option value="eating out">Eating Out</option>
-            </select>
-            <button onclick="addTransaction()">Add Transaction</button>
-        </div>
-
-        <div class="card">
-            <h3>📋 Transactions</h3>
-            <div class="filter-buttons">
-                <button onclick="filterAll()">All</button>
-                <button onclick="filterIncome()">Income</button>
-                <button onclick="filterExpense()">Expenses</button>
-            </div>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Description</th>
-                            <th>Category</th>
-                            <th>Amount</th>
-                            <th>Type</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="transactionList"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="card">
-            <h3>📈 Summary</h3>
-            <div class="summary-grid">
-                <div class="summary-item">
-                    <span>Total Income:</span>
-                    <strong>$<span id="totalIncome">0</span></strong>
-                </div>
-                <div class="summary-item">
-                    <span>Total Expense:</span>
-                    <strong>$<span id="totalExpense">0</span></strong>
-                </div>
-                <div class="summary-item">
-                    <span>Balance:</span>
-                    <strong>$<span id="balance">0</span></strong>
-                </div>
-                <div class="summary-item">
-                    <span>Money Left:</span>
-                    <strong>$<span id="moneyLeft">0</span></strong>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h3>📊 Spending by Category</h3>
-            <div id="categoryBreakdown"></div>
-        </div>
+  <!-- Starting Money Section -->
+  <div class="starting-section">
+    <div class="input-group">
+      <label>Starting Money ($)</label>
+      <input type="number" id="startingMoneyInput" placeholder="Enter amount" step="any">
     </div>
-    <script src="js/app.js"></script>
+    <button id="setStartingMoneyBtn">Set Starting Money</button>
+  </div>
+
+  <!-- Add Transaction Form with Category (only for expenses) -->
+  <h2>Add Transaction</h2>
+  <div class="form-row">
+    <div class="input-group">
+      <label>Description</label>
+      <input type="text" id="descInput" placeholder="e.g., Groceries, Salary">
+    </div>
+    <div class="input-group">
+      <label>Amount ($)</label>
+      <input type="number" id="amountInput" placeholder="0.00" step="any">
+    </div>
+    <div class="input-group">
+      <label>Type</label>
+      <select id="typeSelect">
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+    </div>
+    <div class="input-group" id="categoryGroup" style="display: none;">
+      <label>Category (Expense)</label>
+      <select id="categorySelect">
+        <option value="Food & Dining">Food & Dining</option>
+        <option value="Transportation">Transportation</option>
+        <option value="Housing & Utilities">Housing & Utilities</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Entertainment">Entertainment</option>
+        <option value="Healthcare">Healthcare</option>
+        <option value="Education">Education</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <button id="addTransactionBtn">Add Transaction</button>
+  </div>
+
+  <!-- Transaction List -->
+  <h2>Transactions</h2>
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="income">Income</button>
+    <button class="filter-btn" data-filter="expense">Expense</button>
+  </div>
+  <div class="table-wrapper">
+    <table id="transactionTable">
+      <thead>
+        <tr><th>Description</th><th>Category</th><th>Amount</th><th>Type</th><th>Action</th></tr>
+      </thead>
+      <tbody id="transactionList"></tbody>
+     </table>
+  </div>
+
+  <!-- Summary Section -->
+  <h2>Summary</h2>
+  <div class="summary-grid">
+    <div class="card"><div class="card-label">Total Income</div><div class="card-value income-val" id="totalIncome">$0</div></div>
+    <div class="card"><div class="card-label">Total Expense</div><div class="card-value expense-val" id="totalExpense">$0</div></div>
+    <div class="card"><div class="card-label">Balance</div><div class="card-value balance-val" id="balance">$0</div></div>
+    <div class="card"><div class="card-label">Money Left</div><div class="card-value money-left" id="moneyLeft">$0</div></div>
+  </div>
+
+  <!-- Spending by Category Section (Fully Functional) -->
+  <div class="category-section">
+    <h3>Spending by Category</h3>
+    <div id="categoryBreakdown" class="category-grid">
+      <!-- Dynamic category cards will appear here -->
+    </div>
+  </div>
+
+  <footer>Data persists in your browser using localStorage | Expense categories are tracked automatically</footer>
+</div>
+
+<script>
+  // Transaction object now includes optional 'category' field (only for expenses)
+  let transactions = [];
+  let startingMoney = 0;
+  let currentFilter = 'all';
+
+  // DOM Elements
+  const startingMoneyInput = document.getElementById('startingMoneyInput');
+  const setStartingMoneyBtn = document.getElementById('setStartingMoneyBtn');
+  const descInput = document.getElementById('descInput');
+  const amountInput = document.getElementById('amountInput');
+  const typeSelect = document.getElementById('typeSelect');
+  const categoryGroup = document.getElementById('categoryGroup');
+  const categorySelect = document.getElementById('categorySelect');
+  const addTransactionBtn = document.getElementById('addTransactionBtn');
+  const transactionListEl = document.getElementById('transactionList');
+  const totalIncomeEl = document.getElementById('totalIncome');
+  const totalExpenseEl = document.getElementById('totalExpense');
+  const balanceEl = document.getElementById('balance');
+  const moneyLeftEl = document.getElementById('moneyLeft');
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const categoryBreakdownEl = document.getElementById('categoryBreakdown');
+
+  // Load from localStorage
+  function loadData() {
+    const savedTransactions = localStorage.getItem('transactions');
+    if (savedTransactions) {
+      transactions = JSON.parse(savedTransactions);
+      // Ensure legacy transactions without category have a default category if they are expense
+      transactions = transactions.map(t => {
+        if (t.type === 'expense' && !t.category) {
+          t.category = 'Other';
+        }
+        return t;
+      });
+    }
+    const savedStartingMoney = localStorage.getItem('startingMoney');
+    if (savedStartingMoney !== null) {
+      startingMoney = parseFloat(savedStartingMoney) || 0;
+      startingMoneyInput.value = startingMoney;
+    }
+  }
+
+  // Save to localStorage
+  function saveTransactions() {
+    localStorage.setItem('transactions', JSON.stringify(transactions));
+  }
+
+  function saveStartingMoney() {
+    localStorage.setItem('startingMoney', startingMoney);
+  }
+
+  // Toggle category dropdown visibility based on transaction type
+  function toggleCategoryField() {
+    const selectedType = typeSelect.value;
+    if (selectedType === 'expense') {
+      categoryGroup.style.display = 'flex';
+    } else {
+      categoryGroup.style.display = 'none';
+    }
+  }
+
+  // Update summary values
+  function updateSummary() {
+    let totalIncome = 0;
+    let totalExpense = 0;
+    transactions.forEach(t => {
+      if (t.type === 'income') totalIncome += t.amount;
+      else totalExpense += t.amount;
+    });
+    const balance = totalIncome - totalExpense;
+    const moneyLeft = startingMoney + balance;
+
+    totalIncomeEl.textContent = `$${totalIncome.toFixed(2)}`;
+    totalExpenseEl.textContent = `$${totalExpense.toFixed(2)}`;
+    balanceEl.textContent = `$${balance.toFixed(2)}`;
+    moneyLeftEl.textContent = `$${moneyLeft.toFixed(2)}`;
+  }
+
+  // Render category breakdown (spending by category)
+  function renderCategoryBreakdown() {
+    // Aggregate spending per category (only expense transactions)
+    const categoryMap = new Map();
+    transactions.forEach(t => {
+      if (t.type === 'expense' && t.category) {
+        const current = categoryMap.get(t.category) || 0;
+        categoryMap.set(t.category, current + t.amount);
+      }
+    });
+
+    if (categoryMap.size === 0) {
+      categoryBreakdownEl.innerHTML = '<div class="category-empty">No expense data available. Add an expense with a category to see breakdown.</div>';
+      return;
+    }
+
+    // Sort categories by amount spent (descending)
+    const sortedCategories = Array.from(categoryMap.entries()).sort((a, b) => b[1] - a[1]);
+
+    let html = '';
+    sortedCategories.forEach(([category, amount]) => {
+      html += `
+        <div class="category-card">
+          <div class="category-name">${escapeHtml(category)}</div>
+          <div class="category-amount">$${amount.toFixed(2)}</div>
+        </div>
+      `;
+    });
+    categoryBreakdownEl.innerHTML = html;
+  }
+
+  // Render transaction table based on filter
+  function renderTransactions() {
+    let filteredTransactions = transactions;
+    if (currentFilter === 'income') {
+      filteredTransactions = transactions.filter(t => t.type === 'income');
+    } else if (currentFilter === 'expense') {
+      filteredTransactions = transactions.filter(t => t.type === 'expense');
+    }
+
+    if (filteredTransactions.length === 0) {
+      transactionListEl.innerHTML = '<tr class="empty-row"><td colspan="5">No transactions found</td></tr>';
+      return;
+    }
+
+    transactionListEl.innerHTML = filteredTransactions.map(t => {
+      const categoryDisplay = t.type === 'expense' ? (t.category || 'Other') : '—';
+      return `
+        <tr>
+          <td>${escapeHtml(t.description)}</td>
+          <td>${escapeHtml(categoryDisplay)}</td>
+          <td>$${t.amount.toFixed(2)}</td>
+          <td><span class="badge ${t.type === 'income' ? 'badge-income' : 'badge-expense'}">${t.type === 'income' ? 'Income' : 'Expense'}</span></td>
+          <td><button class="delete-btn" data-id="${t.id}">Delete</button></td>
+        </tr>
+      `;
+    }).join('');
+
+    // Attach delete events
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = parseInt(btn.getAttribute('data-id'));
+        deleteTransaction(id);
+      });
+    });
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  // Delete transaction
+  function deleteTransaction(id) {
+    transactions = transactions.filter(t => t.id !== id);
+    saveTransactions();
+    renderTransactions();
+    updateSummary();
+    renderCategoryBreakdown();
+  }
+
+  // Add new transaction (with category for expenses)
+  function addTransaction() {
+    const description = descInput.value.trim();
+    let amount = parseFloat(amountInput.value);
+    const type = typeSelect.value;
+    let category = null;
+
+    if (!description) {
+      alert('Please enter a description');
+      return;
+    }
+    if (isNaN(amount) || amount <= 0) {
+      alert('Please enter a valid positive amount');
+      return;
+    }
+
+    if (type === 'expense') {
+      category = categorySelect.value;
+      if (!category) {
+        alert('Please select a category for this expense');
+        return;
+      }
+    }
+
+    const newTransaction = {
+      id: Date.now(),
+      description: description,
+      amount: amount,
+      type: type
+    };
+    if (category) {
+      newTransaction.category = category;
+    }
+
+    transactions.push(newTransaction);
+    saveTransactions();
+    renderTransactions();
+    updateSummary();
+    renderCategoryBreakdown();
+
+    // Clear inputs but keep category default
+    descInput.value = '';
+    amountInput.value = '';
+    typeSelect.value = 'expense';
+    toggleCategoryField(); // ensure category field shows (since type defaults to expense)
+  }
+
+  // Set starting money
+  function setStartingMoney() {
+    let newAmount = parseFloat(startingMoneyInput.value);
+    if (isNaN(newAmount)) {
+      alert('Please enter a valid number');
+      return;
+    }
+    startingMoney = newAmount;
+    saveStartingMoney();
+    updateSummary();
+    alert(`Starting money set to $${startingMoney.toFixed(2)}`);
+  }
+
+  // Filter handling
+  function setFilter(filter) {
+    currentFilter = filter;
+    filterBtns.forEach(btn => {
+      if (btn.getAttribute('data-filter') === filter) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+    renderTransactions();
+  }
+
+  // Event Listeners
+  addTransactionBtn.addEventListener('click', addTransaction);
+  setStartingMoneyBtn.addEventListener('click', setStartingMoney);
+  typeSelect.addEventListener('change', toggleCategoryField);
+  
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      setFilter(btn.getAttribute('data-filter'));
+    });
+  });
+
+  // Initialize with proper category field visibility
+  toggleCategoryField();
+
+  // Load data and render everything
+  loadData();
+  updateSummary();
+  renderTransactions();
+  renderCategoryBreakdown();
+</script>
 </body>
 </html>
