@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Budget Planner | Elegant Finance Tracker</title>
+  <title>Budget Planner | Smart Bank Statement Import</title>
   <style>
     * {
       margin: 0;
@@ -18,19 +18,15 @@
       padding: 2rem 1.5rem;
     }
 
-    /* Glassmorphism container */
     .app-container {
-      max-width: 1300px;
+      max-width: 1400px;
       margin: 0 auto;
       background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(0px);
       border-radius: 2rem;
       padding: 2rem 2rem;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.5);
-      transition: all 0.2s ease;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     }
 
-    /* header area */
     .header-section {
       display: flex;
       justify-content: space-between;
@@ -48,7 +44,6 @@
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      letter-spacing: -0.3px;
       display: inline-flex;
       align-items: center;
       gap: 10px;
@@ -57,8 +52,6 @@
     h1::before {
       content: "💰";
       font-size: 2rem;
-      background: none;
-      -webkit-background-clip: unset;
       color: #2c5f8a;
     }
 
@@ -67,17 +60,11 @@
       color: #0f2b3b;
       margin-bottom: 1rem;
       font-size: 1.4rem;
-      letter-spacing: -0.2px;
-      display: inline-block;
-      background: linear-gradient(to right, #1e293b, #334155);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
       border-left: 4px solid #3b82f6;
       padding-left: 0.9rem;
     }
 
-    /* summary cards */
+    /* Summary Cards */
     .summary-grid {
       display: flex;
       flex-wrap: wrap;
@@ -90,7 +77,7 @@
       background: #ffffff;
       border-radius: 1.5rem;
       padding: 1.3rem 1.2rem;
-      transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      transition: all 0.25s ease;
       border: 1px solid rgba(59, 130, 246, 0.2);
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.02);
     }
@@ -98,7 +85,6 @@
     .card:hover {
       transform: translateY(-5px);
       box-shadow: 0 20px 25px -12px rgba(0, 0, 0, 0.12);
-      border-color: #b9d4ff;
     }
 
     .card-label {
@@ -106,15 +92,12 @@
       text-transform: uppercase;
       font-weight: 700;
       color: #5b6e8c;
-      margin-bottom: 0.6rem;
       letter-spacing: 1px;
     }
 
     .card-value {
       font-size: 2rem;
       font-weight: 800;
-      color: #0f172a;
-      word-break: break-word;
     }
 
     .income-val { color: #0f7b3a; }
@@ -122,9 +105,59 @@
     .balance-val { color: #2563eb; }
     .money-left { color: #0f766e; }
 
-    /* starting money panel */
+    /* Upload Section */
+    .upload-section {
+      background: linear-gradient(115deg, #f0f9ff 0%, #ffffff 100%);
+      border-radius: 1.5rem;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid #bfdbfe;
+    }
+
+    .upload-area {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+
+    .file-input-label {
+      background: #1e4a6e;
+      color: white;
+      padding: 0.7rem 1.5rem;
+      border-radius: 60px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+      display: inline-block;
+    }
+
+    .file-input-label:hover {
+      background: #0f3a57;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .upload-btn {
+      background: #0f7b3a;
+    }
+
+    .upload-btn:hover {
+      background: #0a5e2c;
+    }
+
+    .format-hint {
+      font-size: 0.75rem;
+      color: #5b6e8c;
+      margin-top: 0.5rem;
+    }
+
+    /* Starting Money */
     .starting-panel {
-      background: linear-gradient(115deg, #f8fafd 0%, #ffffff 100%);
+      background: #f8fafd;
       border-radius: 1.5rem;
       padding: 1.2rem 1.5rem;
       margin-bottom: 2rem;
@@ -133,7 +166,6 @@
       align-items: flex-end;
       gap: 1rem;
       border: 1px solid #e0edff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
     }
 
     .input-group {
@@ -147,7 +179,6 @@
       font-weight: 700;
       font-size: 0.75rem;
       color: #334155;
-      letter-spacing: 0.3px;
       text-transform: uppercase;
     }
 
@@ -173,9 +204,6 @@
       font-weight: 600;
       border: none;
       cursor: pointer;
-      padding: 0.7rem 1.5rem;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-      transition: 0.15s;
     }
 
     button:hover {
@@ -183,25 +211,12 @@
       transform: scale(0.97);
     }
 
-    .btn-outline {
-      background: white;
-      color: #1e4a6e;
-      border: 1px solid #b9d4ff;
-    }
-
-    .btn-outline:hover {
-      background: #eef4ff;
-      transform: scale(0.97);
-    }
-
-    /* form row */
     .form-card {
       background: #ffffff;
       border-radius: 1.5rem;
       padding: 1.3rem 1.5rem;
       margin-bottom: 2rem;
       border: 1px solid #e9f0fa;
-      box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.05);
     }
 
     .form-row {
@@ -211,21 +226,13 @@
       align-items: flex-end;
     }
 
-    /* transaction table */
-    .table-header-tools {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      margin: 0.5rem 0 1rem 0;
-    }
-
     .filter-group {
       display: flex;
       gap: 0.5rem;
       background: #f1f5f9;
       padding: 0.3rem;
       border-radius: 60px;
+      margin-bottom: 1rem;
     }
 
     .filter-btn {
@@ -233,7 +240,6 @@
       color: #334155;
       padding: 0.4rem 1.2rem;
       font-size: 0.8rem;
-      font-weight: 600;
       border-radius: 40px;
       box-shadow: none;
     }
@@ -242,11 +248,6 @@
       background: #ffffff;
       color: #1e4a6e;
       box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
-
-    .filter-btn:hover {
-      background: #e2e8f0;
-      transform: none;
     }
 
     .table-wrapper {
@@ -263,20 +264,16 @@
       font-size: 0.9rem;
     }
 
-    th {
+    th, td {
       text-align: left;
       padding: 1rem 1rem;
+      border-bottom: 1px solid #f0f2f5;
+    }
+
+    th {
       background: #fafcff;
       font-weight: 700;
       color: #1e2f3c;
-      border-bottom: 1px solid #e2edf2;
-    }
-
-    td {
-      padding: 1rem 1rem;
-      border-bottom: 1px solid #f0f2f5;
-      color: #1e293b;
-      font-weight: 500;
     }
 
     tr:hover td {
@@ -293,52 +290,37 @@
       font-weight: 700;
     }
 
-    .badge-income {
-      background: #e3f9ed;
-      color: #0a6b3e;
-    }
+    .badge-income { background: #e3f9ed; color: #0a6b3e; }
+    .badge-expense { background: #fee9e7; color: #b91c1c; }
 
-    .badge-income::before {
-      content: "↑";
-      font-weight: bold;
-    }
-
-    .badge-expense {
-      background: #fee9e7;
-      color: #b91c1c;
-    }
-
-    .badge-expense::before {
-      content: "↓";
-      font-weight: bold;
+    .category-badge {
+      background: #eef2ff;
+      color: #3730a3;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 30px;
     }
 
     .delete-btn {
       background: none;
       border: none;
-      font-size: 1rem;
       cursor: pointer;
       color: #94a3b8;
       padding: 0.3rem 0.8rem;
       border-radius: 30px;
-      transition: all 0.1s;
-      font-weight: 600;
     }
 
     .delete-btn:hover {
       color: #e11d48;
       background: #fff0f0;
-      transform: scale(0.95);
     }
 
     .empty-row td {
       text-align: center;
       color: #94a3b8;
       padding: 2rem;
-      font-style: italic;
     }
 
-    /* footer */
     .footer-note {
       text-align: center;
       margin-top: 2rem;
@@ -348,43 +330,12 @@
       padding-top: 1.2rem;
     }
 
-    /* responsive */
     @media (max-width: 680px) {
-      body {
-        padding: 1rem;
-      }
-      .app-container {
-        padding: 1.2rem;
-      }
-      .card-value {
-        font-size: 1.4rem;
-      }
-      .form-row {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      button {
-        width: 100%;
-      }
-      .filter-group {
-        margin-top: 0.5rem;
-      }
-    }
-
-    /* subtle animations */
-    @keyframes fadeSlide {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .card, .form-card, .starting-panel {
-      animation: fadeSlide 0.3s ease-out;
+      body { padding: 1rem; }
+      .app-container { padding: 1.2rem; }
+      .card-value { font-size: 1.4rem; }
+      .form-row { flex-direction: column; align-items: stretch; }
+      button { width: 100%; }
     }
   </style>
 </head>
@@ -392,10 +343,26 @@
 <div class="app-container">
   <div class="header-section">
     <h1>Budget Planner</h1>
-    <div style="font-size: 0.8rem; color: #4b6b8f;">✨ live balance · smart tracker</div>
+    <div style="font-size: 0.8rem; color: #4b6b8f;">📁 Import bank statements · Auto-classify</div>
   </div>
 
-  <!-- Starting Money Card -->
+  <!-- FILE UPLOAD SECTION -->
+  <div class="upload-section">
+    <h2>📄 Upload Bank Statement</h2>
+    <div class="upload-area">
+      <label class="file-input-label">
+        📂 Choose CSV File
+        <input type="file" id="csvUpload" accept=".csv, .txt">
+      </label>
+      <button id="parseStatementBtn" class="upload-btn">🔍 Parse & Import</button>
+    </div>
+    <div class="format-hint">
+      ✅ Expected CSV format: <strong>Date,Description,Amount</strong> (negative = expense, positive = income)<br>
+      Example: 2024-01-15,Starbucks,-5.50  or 2024-01-10,Salary,2500.00
+    </div>
+  </div>
+
+  <!-- Starting Money -->
   <div class="starting-panel">
     <div class="input-group">
       <label>💰 Starting Money</label>
@@ -404,31 +371,19 @@
     <button id="setStartingMoneyBtn">Set Starting Money</button>
   </div>
 
-  <!-- Add Transaction Section -->
+  <!-- Add Manual Transaction -->
   <div class="form-card">
     <h2>➕ Add Transaction</h2>
     <div class="form-row">
-      <div class="input-group" style="flex: 2;">
-        <label>Description</label>
-        <input type="text" id="descInput" placeholder="Salary, Groceries, Rent...">
-      </div>
-      <div class="input-group" style="flex: 1;">
-        <label>Amount ($)</label>
-        <input type="number" id="amountInput" placeholder="0.00" step="any">
-      </div>
-      <div class="input-group" style="flex: 1;">
-        <label>Type</label>
-        <select id="typeSelect">
-          <option value="income">Income 💵</option>
-          <option value="expense">Expense 💸</option>
-        </select>
-      </div>
+      <div class="input-group" style="flex: 2;"><label>Description</label><input type="text" id="descInput" placeholder="e.g., Groceries, Salary"></div>
+      <div class="input-group" style="flex: 1;"><label>Amount ($)</label><input type="number" id="amountInput" placeholder="0.00" step="any"></div>
+      <div class="input-group" style="flex: 1;"><label>Type</label><select id="typeSelect"><option value="income">Income 💵</option><option value="expense">Expense 💸</option></select></div>
       <button id="addTransactionBtn">+ Add Transaction</button>
     </div>
   </div>
 
-  <!-- Transaction List with Filters -->
-  <div class="table-header-tools">
+  <!-- Filters & Transactions -->
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
     <h2>📋 Transactions</h2>
     <div class="filter-group">
       <button class="filter-btn active" data-filter="all">All</button>
@@ -438,14 +393,12 @@
   </div>
   <div class="table-wrapper">
     <table>
-      <thead>
-        <tr><th>Description</th><th>Amount</th><th>Type</th><th style="width: 80px;">Action</th></tr>
-      </thead>
+      <thead><tr><th>Description</th><th>Category</th><th>Amount</th><th>Type</th><th>Action</th></tr></thead>
       <tbody id="transactionList"></tbody>
     </table>
   </div>
 
-  <!-- Summary Cards -->
+  <!-- Summary -->
   <h2>📈 Summary</h2>
   <div class="summary-grid">
     <div class="card"><div class="card-label">Total Income</div><div class="card-value income-val" id="totalIncome">$0.00</div></div>
@@ -453,32 +406,43 @@
     <div class="card"><div class="card-label">Balance</div><div class="card-value balance-val" id="balance">$0.00</div></div>
     <div class="card"><div class="card-label">Money Left</div><div class="card-value money-left" id="moneyLeft">$0.00</div></div>
   </div>
-  <div class="footer-note">
-    💾 All data saved locally · Your finances stay private
-  </div>
+  <div class="footer-note">💾 Auto-saves to browser | Upload CSV to import bank statements (auto-classify: groceries, bills, etc.)</div>
 </div>
 
 <script>
   // ---------- STATE ----------
   let transactions = [];
-  let startingMoney = 1000;     // default $1000
+  let startingMoney = 1000;
   let currentFilter = 'all';
 
-  // ---------- DOM elements ----------
-  const startingMoneyInput = document.getElementById('startingMoneyInput');
-  const setStartingMoneyBtn = document.getElementById('setStartingMoneyBtn');
-  const descInput = document.getElementById('descInput');
-  const amountInput = document.getElementById('amountInput');
-  const typeSelect = document.getElementById('typeSelect');
-  const addTransactionBtn = document.getElementById('addTransactionBtn');
-  const transactionListEl = document.getElementById('transactionList');
-  const totalIncomeEl = document.getElementById('totalIncome');
-  const totalExpenseEl = document.getElementById('totalExpense');
-  const balanceEl = document.getElementById('balance');
-  const moneyLeftEl = document.getElementById('moneyLeft');
-  const filterBtns = document.querySelectorAll('.filter-btn');
+  // ---------- CATEGORY CLASSIFIER (smart keyword mapping) ----------
+  const categoryRules = [
+    { keywords: ['starbucks', 'costa', 'coffee', 'dunkin', 'cafe'], category: 'Coffee & Dining' },
+    { keywords: ['grocery', 'supermarket', 'whole foods', 'trader joe', 'kroger', 'aldi', 'safeway', 'walmart grocery', 'target grocery'], category: 'Groceries' },
+    { keywords: ['uber', 'lyft', 'taxi', 'gas', 'fuel', 'shell', 'bp', 'chevron', 'parking', 'toll'], category: 'Transportation' },
+    { keywords: ['electric', 'water bill', 'gas bill', 'internet', 'netflix', 'spotify', 'phone bill', 'verizon', 'att', 't-mobile', 'comcast', 'utility'], category: 'Bills & Utilities' },
+    { keywords: ['restaurant', 'pizza', 'mcdonald', 'burger', 'chipotle', 'dining', 'food delivery', 'doordash', 'ubereats'], category: 'Dining Out' },
+    { keywords: ['amazon', 'target', 'walmart', 'best buy', 'online shopping', 'clothing', 'zara', 'nike'], category: 'Shopping' },
+    { keywords: ['rent', 'mortgage', 'apartment', 'lease', 'housing'], category: 'Housing' },
+    { keywords: ['doctor', 'hospital', 'pharmacy', 'cvs', 'walgreens', 'health', 'dental', 'insurance premium'], category: 'Healthcare' },
+    { keywords: ['movie', 'cinema', 'concert', 'entertainment', 'hulu', 'disney+', 'gaming', 'steam'], category: 'Entertainment' },
+    { keywords: ['salary', 'paycheck', 'wage', 'income', 'bonus', 'freelance', 'client payment'], category: 'Income' }
+  ];
 
-  // ---------- Helper: escape HTML ----------
+  function classifyTransaction(description, amount, type) {
+    if (type === 'income') return 'Income';
+    const lowerDesc = description.toLowerCase();
+    for (let rule of categoryRules) {
+      for (let kw of rule.keywords) {
+        if (lowerDesc.includes(kw)) {
+          return rule.category;
+        }
+      }
+    }
+    return 'Other';
+  }
+
+  // Helper: escape HTML
   function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
@@ -489,76 +453,73 @@
     });
   }
 
-  // ---------- Load from localStorage ----------
+  // Load / Save
   function loadData() {
-    const savedTransactions = localStorage.getItem('transactions');
-    if (savedTransactions) {
-      transactions = JSON.parse(savedTransactions);
+    const saved = localStorage.getItem('transactions');
+    if (saved) {
+      transactions = JSON.parse(saved);
+      // Recompute categories for legacy items (ensure they have category)
+      transactions = transactions.map(t => {
+        if (!t.category) {
+          t.category = classifyTransaction(t.description, t.amount, t.type);
+        }
+        return t;
+      });
     }
-    const savedStartingMoney = localStorage.getItem('startingMoney');
-    if (savedStartingMoney !== null) {
-      startingMoney = parseFloat(savedStartingMoney);
-      if (isNaN(startingMoney)) startingMoney = 0;
-    } else {
-      startingMoney = 1000;
+    const savedMoney = localStorage.getItem('startingMoney');
+    if (savedMoney !== null) {
+      startingMoney = parseFloat(savedMoney);
+      if (isNaN(startingMoney)) startingMoney = 1000;
     }
     startingMoneyInput.value = startingMoney;
   }
 
-  // Save to localStorage
   function saveTransactions() {
     localStorage.setItem('transactions', JSON.stringify(transactions));
   }
-
   function saveStartingMoney() {
     localStorage.setItem('startingMoney', startingMoney);
   }
 
-  // Update summary values
+  // Update summary
   function updateSummary() {
-    let totalIncome = 0;
-    let totalExpense = 0;
+    let totalIncome = 0, totalExpense = 0;
     for (let t of transactions) {
       if (t.type === 'income') totalIncome += t.amount;
       else totalExpense += t.amount;
     }
     const balance = totalIncome - totalExpense;
     const moneyLeft = startingMoney + balance;
-
     totalIncomeEl.textContent = `$${totalIncome.toFixed(2)}`;
     totalExpenseEl.textContent = `$${totalExpense.toFixed(2)}`;
     balanceEl.textContent = `$${balance.toFixed(2)}`;
     moneyLeftEl.textContent = `$${moneyLeft.toFixed(2)}`;
   }
 
-  // Render transaction table (with filter)
+  // Render transactions
   function renderTransactions() {
     let filtered = [...transactions];
-    if (currentFilter === 'income') {
-      filtered = transactions.filter(t => t.type === 'income');
-    } else if (currentFilter === 'expense') {
-      filtered = transactions.filter(t => t.type === 'expense');
-    }
+    if (currentFilter === 'income') filtered = transactions.filter(t => t.type === 'income');
+    if (currentFilter === 'expense') filtered = transactions.filter(t => t.type === 'expense');
 
     if (filtered.length === 0) {
-      transactionListEl.innerHTML = `<tr class="empty-row"><td colspan="4">✨ No transactions yet. Add your first income or expense! ✨</td></tr>`;
+      transactionListEl.innerHTML = `<tr class="empty-row"><td colspan="5">✨ No transactions. Add manually or import a CSV file. ✨</td></tr>`;
       return;
     }
 
-    let rows = '';
+    let html = '';
     for (let t of filtered) {
-      rows += `
+      html += `
         <tr>
           <td><strong>${escapeHtml(t.description)}</strong></td>
+          <td><span class="category-badge">${escapeHtml(t.category || 'Other')}</span></td>
           <td>$${t.amount.toFixed(2)}</td>
           <td><span class="badge ${t.type === 'income' ? 'badge-income' : 'badge-expense'}">${t.type === 'income' ? 'Income' : 'Expense'}</span></td>
           <td><button class="delete-btn" data-id="${t.id}">🗑 Delete</button></td>
         </tr>
       `;
     }
-    transactionListEl.innerHTML = rows;
-
-    // attach delete events
+    transactionListEl.innerHTML = html;
     document.querySelectorAll('.delete-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const id = parseInt(btn.getAttribute('data-id'));
@@ -567,7 +528,6 @@
     });
   }
 
-  // Delete transaction
   function deleteTransaction(id) {
     transactions = transactions.filter(t => t.id !== id);
     saveTransactions();
@@ -575,92 +535,157 @@
     updateSummary();
   }
 
-  // Add transaction
-  function addTransaction() {
+  function addManualTransaction() {
     const description = descInput.value.trim();
     let amount = parseFloat(amountInput.value);
     const type = typeSelect.value;
 
-    if (!description) {
-      alert('Please enter a description (e.g., Groceries, Freelance)');
-      return;
-    }
-    if (isNaN(amount) || amount <= 0) {
-      alert('Amount must be a positive number greater than zero.');
-      return;
-    }
+    if (!description) { alert('Enter description'); return; }
+    if (isNaN(amount) || amount <= 0) { alert('Valid positive amount required'); return; }
 
+    const category = classifyTransaction(description, amount, type);
     const newTransaction = {
       id: Date.now(),
       description: description,
       amount: amount,
       type: type,
+      category: category
     };
     transactions.push(newTransaction);
     saveTransactions();
     renderTransactions();
     updateSummary();
-
-    // reset fields (keep type as is for convenience)
     descInput.value = '';
     amountInput.value = '';
-    // optional: focus description for next entry
     descInput.focus();
   }
 
-  // Set starting money
   function setStartingMoney() {
-    let newAmount = parseFloat(startingMoneyInput.value);
-    if (isNaN(newAmount)) {
-      alert('Please enter a valid numeric amount for starting money.');
-      return;
-    }
-    startingMoney = newAmount;
+    let val = parseFloat(startingMoneyInput.value);
+    if (isNaN(val)) { alert('Enter valid number'); return; }
+    startingMoney = val;
     saveStartingMoney();
     updateSummary();
-    // subtle feedback
-    const btn = setStartingMoneyBtn;
-    const originalText = btn.innerText;
-    btn.innerText = '✓ Updated!';
-    setTimeout(() => { btn.innerText = originalText; }, 1200);
+    alert(`Starting money set to $${startingMoney.toFixed(2)}`);
   }
 
-  // Change active filter
-  function setFilter(filter) {
-    currentFilter = filter;
-    filterBtns.forEach(btn => {
-      const btnFilter = btn.getAttribute('data-filter');
-      if (btnFilter === filter) {
-        btn.classList.add('active');
-      } else {
-        btn.classList.remove('active');
+  // ---------- CSV PARSING & BANK STATEMENT IMPORT ----------
+  function parseCSVAndImport(csvText) {
+    const lines = csvText.split(/\r?\n/);
+    if (lines.length === 0) return;
+    let importedCount = 0;
+    let skipped = 0;
+
+    // try to detect header or first line
+    for (let i = 0; i < lines.length; i++) {
+      let line = lines[i].trim();
+      if (line === "") continue;
+      // attempt to split by comma
+      let parts = line.split(',');
+      if (parts.length < 3) continue;
+
+      // try to extract: date (optional), description, amount
+      let dateStr = parts[0].trim();
+      let description = parts[1].trim();
+      let amountStr = parts[2].trim();
+
+      // fallback: if description seems empty, try alternative format
+      if (description === "" && parts.length > 2) {
+        description = parts[1] + " " + parts[2];
+        amountStr = parts[3]?.trim() || "";
       }
-    });
-    renderTransactions();
+
+      let amount = parseFloat(amountStr);
+      if (isNaN(amount)) continue;
+
+      let type = 'expense';
+      let finalAmount = Math.abs(amount);
+      if (amount > 0) {
+        type = 'income';
+      } else {
+        type = 'expense';
+      }
+
+      if (finalAmount === 0) continue;
+
+      // smart classification based on description
+      const category = classifyTransaction(description, finalAmount, type);
+      const transactionExists = transactions.some(t => t.description === description && Math.abs(t.amount - finalAmount) < 0.01);
+      if (!transactionExists) {
+        const newTx = {
+          id: Date.now() + i + Math.random(),
+          description: description.substring(0, 100),
+          amount: finalAmount,
+          type: type,
+          category: category
+        };
+        transactions.push(newTx);
+        importedCount++;
+      } else {
+        skipped++;
+      }
+    }
+
+    if (importedCount > 0) {
+      saveTransactions();
+      renderTransactions();
+      updateSummary();
+      alert(`✅ Successfully imported ${importedCount} transactions. Skipped ${skipped} duplicates.`);
+    } else {
+      alert(`No new transactions found. Make sure CSV has columns: Date,Description,Amount (negative for expenses).`);
+    }
   }
 
-  // Event binding
-  addTransactionBtn.addEventListener('click', addTransaction);
-  setStartingMoneyBtn.addEventListener('click', setStartingMoney);
+  // file upload handler
+  const fileInput = document.getElementById('csvUpload');
+  const parseBtn = document.getElementById('parseStatementBtn');
+
+  parseBtn.addEventListener('click', () => {
+    if (!fileInput.files || fileInput.files.length === 0) {
+      alert('Please select a CSV file first.');
+      return;
+    }
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const content = e.target.result;
+      parseCSVAndImport(content);
+      fileInput.value = ''; // reset file input
+    };
+    reader.onerror = function() {
+      alert('Error reading file.');
+    };
+    reader.readAsText(file, 'UTF-8');
+  });
+
+  // manual add & starting money
+  const addBtn = document.getElementById('addTransactionBtn');
+  const setMoneyBtn = document.getElementById('setStartingMoneyBtn');
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  const totalIncomeEl = document.getElementById('totalIncome');
+  const totalExpenseEl = document.getElementById('totalExpense');
+  const balanceEl = document.getElementById('balance');
+  const moneyLeftEl = document.getElementById('moneyLeft');
+  const transactionListEl = document.getElementById('transactionList');
+  const startingMoneyInput = document.getElementById('startingMoneyInput');
+  const descInput = document.getElementById('descInput');
+  const amountInput = document.getElementById('amountInput');
+  const typeSelect = document.getElementById('typeSelect');
+
+  addBtn.addEventListener('click', addManualTransaction);
+  setMoneyBtn.addEventListener('click', setStartingMoney);
+
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
-      const filterValue = btn.getAttribute('data-filter');
-      setFilter(filterValue);
+      const f = btn.getAttribute('data-filter');
+      currentFilter = f;
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTransactions();
     });
   });
 
-  // press enter on amount or description?
-  const inputs = [descInput, amountInput];
-  inputs.forEach(inp => {
-    inp.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        addTransaction();
-      }
-    });
-  });
-
-  // init
+  // Initialize
   loadData();
   updateSummary();
   renderTransactions();
